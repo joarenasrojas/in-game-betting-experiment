@@ -13,21 +13,87 @@
     <div id="app">
         <!-- INSTRUCTIONS VIEW 1 -->
         <div id="instructions-view-1" class="view">
-            <h2>Instructions - Part 1</h2>
-            <p>You will play a dice game against the House. Each trial has three stages.</p>
-            <p>In each stage you will place a bet, report your confidence, and then roll dice.</p>
+            <h2>Gambling Game</h2>
+            <p>You will play a dice gambling game with <strong>10 trials</strong>. You start the game with <strong>300
+                    points</strong>. During each trial you have the chance to earn more. Each trial consists of 3
+                stages.</p>
+
+            <p><strong>The Goal:</strong> At the end of each trial you win if your total dice sum is higher than the
+                House's total sum.</p>
+
+            <p><strong>The Setup:</strong> At the start of a trial, both you and the House start with a sum of 0.</p>
+
+            <p><strong>The Process:</strong></p>
+            <p>At the beginning of each trial you bet <strong>15 points</strong> to play. Then the three stages follow.
+            </p>
+            <p style="margin-bottom: 0;">At the beginning of each stage you have three options:</p>
+            <ul
+                style="text-align: left; display: inline-block; margin-top: 0; margin-bottom: 1rem; padding-left: 1.2rem;">
+                <li><strong>Add:</strong> Increase your bet by 5 points.</li>
+                <li><strong>Hold:</strong> Keep your bet the same.</li>
+                <li><strong>Retract:</strong> Decrease your bet by 5 points.</li>
+            </ul>
+
+            <p>After you have made your choice you and the house each roll a dice. The numbers you roll are added to
+                your respective totals. If you have a <strong>higher dice sum</strong> at the end of the trial
+                <strong>you get paid twice your bet</strong>. If the house has a <strong>higher or equal dice
+                    sum</strong> you <strong>lose the betting amount</strong>.</p>
             <button id="btn-instructions-next-1" class="primary-btn">Next</button>
         </div>
         <!-- INSTRUCTIONS VIEW 2 -->
         <div id="instructions-view-2" class="view">
-            <h2>Instructions - Part 2</h2>
-            <p>Goal: Have a higher total sum than the House after 3 stages. Ties count as losses.</p>
+            <h2>Accuracy Score</h2>
+            <p>Unlike a casino, we don't just pay you for winning. We pay you for knowing whether you will win.</p>
+            <p>After every betting decision, we will ask: <em>"What is the probability that you will win this
+                    round?"</em> (0% to 100%).</p>
+            <p>We calculate an <strong>Accuracy Score</strong> for every prediction you make.</p>
+
+            <p style="margin-bottom: 0;"><strong>How it works:</strong></p>
+            <ul
+                style="text-align: left; display: inline-block; margin-top: 0; margin-bottom: 1rem; padding-left: 1.2rem;">
+                <li>If you say <strong>100%</strong> and you win, you get a <strong>Perfect Score (1.0)</strong>.</li>
+                <li>If you say <strong>100%</strong> and you lose, you get a <strong>Zero Score (0.0)</strong>.</li>
+                <li>If you say <strong>50%</strong>, you get a safe, middle-of-the-road score regardless of the outcome.
+                </li>
+            </ul>
+
+            <p><strong>The Trap:</strong> This scoring system penalizes overconfidence. Being "sure" and being wrong
+                hurts your accuracy score more than if you're wrong and uncertain.</p>
+
+            <p><strong>The Strategy:</strong> The math is designed so that the only way to get the highest possible
+                score is to report exactly what you truly believe.</p>
             <button id="btn-instructions-next-2" class="primary-btn">Next</button>
         </div>
         <!-- INSTRUCTIONS VIEW 3 -->
         <div id="instructions-view-3" class="view">
-            <h2>Instructions - Part 3</h2>
-            <p>Press the button when you understand the rules to start the experiment.</p>
+            <h2>Your Payout</h2>
+            <p style="margin-bottom: 0;">You are guaranteed <strong>$3</strong> for completing this experiment, but you
+                will also get a bonus depending on how well you do in the game. Your bonus depends on two numbers:</p>
+
+            <ul
+                style="text-align: left; display: inline-block; margin-top: 0; margin-bottom: 1rem; padding-left: 1.2rem;">
+                <li><strong>Your Wealth:</strong> The points you have accumulated from the dice game (Potential
+                    Earnings).</li>
+                <li><strong>Your Multiplier:</strong> Your average Accuracy Score across the entire experiment.</li>
+            </ul>
+
+            <p style="background: #333; padding: 0.5rem; border-radius: 4px; font-family: monospace;">Cash Payout = Base
+                Pay + (Points x Accuracy Score) / 100</p>
+
+            <p style="margin-bottom: 0;"><strong>Examples:</strong></p>
+            <ul
+                style="text-align: left; display: inline-block; margin-top: 0; margin-bottom: 1rem; font-size: 0.9rem; padding-left: 1.2rem;">
+                <li>You win big (600 points) but guess randomly (50% accuracy): You take home (600 * 0.5)/100 =
+                    <strong>$3 bonus</strong> + $3 base pay for <strong>$6 in total</strong>.</li>
+                <li>You win big (600 points) and predict your wins/losses well (90% accuracy): You take home (600 *
+                    0.9)/100 = <strong>$5.40 bonus</strong> + $3 base pay for <strong>$8.40 in total</strong>.</li>
+                <li>You win big (600 points) but lie about your confidence (saying 100% when it was risky), resulting in
+                    10% accuracy: You take home (600 * 0.1)/100 = <strong>$0.60 bonus</strong> + $3 base pay for
+                    <strong>$3.60 in total</strong>.</li>
+            </ul>
+
+            <p><strong>Bottom Line:</strong> To make the most money, play smart to build your bank, but be brutally
+                honest about your chances.</p>
             <button id="btn-start-first-trial" class="primary-btn">I Understand</button>
         </div>
         <!-- GAME VIEW -->
