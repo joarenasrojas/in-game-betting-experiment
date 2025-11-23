@@ -109,9 +109,20 @@ function calculate_entropy(p_win, p_loss) {
     return entropy;
 }
 
+/**
+ * Calculates the Brier Score for a single prediction.
+ * Formula: (prediction - outcome)^2
+ * @param {number} prediction Probability assigned to the outcome (0.0 to 1.0)
+ * @param {number} outcome Actual outcome (1 for occur, 0 for did not occur)
+ * @returns {number} Brier Score (0 to 1)
+ */
+function calculate_brier_score(prediction, outcome) {
+    return Math.pow(prediction - outcome, 2);
+}
+
 // Export for Node.js testing environment, or attach to window for browser
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { calculate_probabilities, calculate_entropy, convolve };
+    module.exports = { calculate_probabilities, calculate_entropy, convolve, calculate_brier_score };
 } else {
-    window.MathLogic = { calculate_probabilities, calculate_entropy, convolve };
+    window.MathLogic = { calculate_probabilities, calculate_entropy, convolve, calculate_brier_score };
 }

@@ -15,11 +15,11 @@ const UI = {
 
     cacheDOM() {
         this.views = {
-            setup: document.getElementById('setup-view'),
-            instructions: document.getElementById('instructions-view'),
+            instructions1: document.getElementById('instructions-view-1'),
+            instructions2: document.getElementById('instructions-view-2'),
+            instructions3: document.getElementById('instructions-view-3'),
             game: document.getElementById('game-view'),
             result: document.getElementById('result-view'),
-            blockBreak: document.getElementById('block-break-view'),
             end: document.getElementById('end-view')
         };
 
@@ -50,10 +50,9 @@ const UI = {
     },
 
     bindEvents() {
-        // Setup
-        document.getElementById('btn-start-exp').addEventListener('click', () => this.game.start());
-
-        // Instructions
+        // Instructions Navigation
+        document.getElementById('btn-instructions-next-1').addEventListener('click', () => this.showInstructions(2));
+        document.getElementById('btn-instructions-next-2').addEventListener('click', () => this.showInstructions(3));
         document.getElementById('btn-start-first-trial').addEventListener('click', () => this.game.proceedToFirstTrial());
 
         // Info Ack (Removed - Auto Advance)
@@ -76,7 +75,7 @@ const UI = {
         document.getElementById('btn-next-trial').addEventListener('click', () => this.game.endTrial());
 
         // Block Break
-        document.getElementById('btn-resume-block').addEventListener('click', () => this.game.resumeFromBlockBreak());
+
 
         // End / Download
         // End / Download
@@ -134,17 +133,32 @@ const UI = {
         });
     },
 
+    showInstructions(screen) {
+        // Hide all views
+        Object.values(this.views).forEach(el => {
+            if (el) el.classList.remove('active');
+        });
+
+        // Show the requested instruction screen
+        if (screen === 1 && this.views.instructions1) {
+            this.views.instructions1.classList.add('active');
+        } else if (screen === 2 && this.views.instructions2) {
+            this.views.instructions2.classList.add('active');
+        } else if (screen === 3 && this.views.instructions3) {
+            this.views.instructions3.classList.add('active');
+        }
+    },
+
     render() {
         // Hide all views
         Object.values(this.views).forEach(el => el.classList.remove('active'));
 
         // Show current view based on game state
         switch (this.game.state) {
-            case 'SETUP':
-                this.views.setup.classList.add('active');
-                break;
             case 'INSTRUCTIONS':
-                this.views.instructions.classList.add('active');
+                if (this.views.instructions1) {
+                    this.views.instructions1.classList.add('active');
+                }
                 break;
             case 'TRIAL_START':
             case 'STAGE_INFO':
@@ -157,9 +171,7 @@ const UI = {
                 this.views.result.classList.add('active');
                 this.renderResult();
                 break;
-            case 'BLOCK_BREAK':
-                this.views.blockBreak.classList.add('active');
-                break;
+
             case 'END':
                 this.views.end.classList.add('active');
                 break;

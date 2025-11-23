@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Game
     const game = new GameSession({
         nTrials: 10, // 10 trials total
-        startWealth: 500
+        startWealth: 300
     });
 
     // Initialize UI with game instance

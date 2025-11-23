@@ -7,8 +7,8 @@ class GameSession {
     constructor(config) {
         this.participantId = config.participantId || this.generateParticipantId();
         this.startWealth = config.startWealth || 500;
-        this.ante = config.ante || 20;
-        this.betStep = config.betStep || 10;
+        this.ante = config.ante || 15;
+        this.betStep = config.betStep || 5;
         this.nTrials = config.nTrials || 10;
         this.nStages = config.nStages || 3;
         this.diceSides = config.diceSides || 6;
@@ -20,7 +20,7 @@ class GameSession {
         this.wealth = this.startWealth;
 
         // State
-        this.state = 'SETUP';
+        this.state = 'INSTRUCTIONS';
         // Possible States:
         // SETUP, INSTRUCTIONS, TRIAL_START, STAGE_INFO, STAGE_ACTION, STAGE_BELIEF, STAGE_RESULT, TRIAL_END, BLOCK_BREAK, END
 
@@ -57,24 +57,13 @@ class GameSession {
             return;
         }
 
-        // Check for block break
-        if (this.currentTrialIndex > 0 && this.currentTrialIndex % this.blockSize === 0 && this.state !== 'BLOCK_BREAK') {
-            this.state = 'BLOCK_BREAK';
-            UI.render();
-            return;
-        }
-
         this.state = 'TRIAL_START';
         this.currentStage = 0;
 
-        // Deduct Ante
-        if (this.wealth < this.ante) {
-            alert("Bankrupt! Game Over.");
-            this.endExperiment();
-            return;
-        }
-        this.wealth -= this.ante;
+        // Start with initial bet of 15 points
         this.currentBet = this.ante;
+        // Deduct ante immediately
+        this.wealth -= this.currentBet;
 
         this.playerSum = 0;
         this.houseSum = this.startingBias;
@@ -89,9 +78,11 @@ class GameSession {
         // Render initial empty state to ensure view transition happens before animation
         UI.render();
 
-        // Move to first stage after short delay
+        // Move to first betting decision (Stage 1) after short delay
         setTimeout(() => {
-            this.nextStage();
+            this.currentStage = 1;
+            this.state = 'STAGE_ACTION';
+            UI.render();
         }, 100);
     }
 
@@ -101,8 +92,6 @@ class GameSession {
     }
 
     nextStage() {
-        this.currentStage++;
-
         // Roll Dice
         const pRoll = Math.floor(Math.random() * this.diceSides) + 1;
         const hRoll = Math.floor(Math.random() * this.diceSides) + 1;
@@ -112,26 +101,15 @@ class GameSession {
         this.playerSum += pRoll;
         this.houseSum += hRoll;
 
-        const remainingStages = this.nStages - this.currentStage;
-
-        // Calculate Probs & Entropy
-        const probs = MathLogic.calculate_probabilities(this.playerSum, this.houseSum, remainingStages, this.diceSides);
-        const entropy = MathLogic.calculate_entropy(probs.win, probs.loss);
-
-        // Snapshot for history (partial)
-        this.currentSnapshot = {
-            trial_id: this.currentTrial.trial_id,
-            stage: this.currentStage,
-            p_roll: pRoll,
-            h_roll: hRoll,
-            p_sum: this.playerSum,
-            h_sum: this.houseSum,
-            wealth_available: this.wealth,
-            current_bet: this.currentBet,
-            remaining_stages: remainingStages,
-            ground_truth_probs: probs,
-            entropy: entropy
-        };
+        // Update the current snapshot with the dice rolls
+        const lastSnapshot = this.currentTrial.history[this.currentTrial.history.length - 1];
+        if (lastSnapshot) {
+            lastSnapshot.p_roll = pRoll;
+            lastSnapshot.h_roll = hRoll;
+            // Update sums after the roll
+            lastSnapshot.p_sum_after_roll = this.playerSum;
+            lastSnapshot.h_sum_after_roll = this.houseSum;
+        }
 
         this.state = 'STAGE_INFO';
         UI.render();
@@ -139,6 +117,8 @@ class GameSession {
 
     acknowledgeInfo() {
         if (this.currentStage < this.nStages) {
+            // Move to next stage
+            this.currentStage++;
             this.state = 'STAGE_ACTION';
         } else {
             // Final stage, go straight to result
@@ -155,12 +135,15 @@ class GameSession {
         if (action === 'retract') {
             if (this.currentBet >= this.betStep) {
                 this.currentBet -= this.betStep;
+                // Refund wealth immediately
                 this.wealth += this.betStep;
                 actionRecord = 'retract';
             }
-        } else if (action === 'add') { // Renamed from double
+        } else if (action === 'add') {
+            // Check if we have enough wealth to add to the bet
             if (this.wealth >= this.betStep) {
                 this.currentBet += this.betStep;
+                // Deduct wealth immediately
                 this.wealth -= this.betStep;
                 actionRecord = 'add';
             }
@@ -175,14 +158,41 @@ class GameSession {
         // beliefValue: 0-100
         this.lastBelief = parseFloat(beliefValue) / 100.0;
 
-        // Complete the snapshot
-        this.currentSnapshot.action_taken = this.lastAction;
-        this.currentSnapshot.belief_reported = this.lastBelief;
-        this.currentSnapshot.bet_after_action = this.currentBet;
+        // Calculate probabilities before rolling
+        const remainingStages = this.nStages - this.currentStage + 1;
+        const probs = MathLogic.calculate_probabilities(this.playerSum, this.houseSum, remainingStages, this.diceSides);
+        const entropy = MathLogic.calculate_entropy(probs.win, probs.loss);
+
+        // Create snapshot for this stage
+        this.currentSnapshot = {
+            trial_id: this.currentTrial.trial_id,
+            stage: this.currentStage,
+            p_roll: null, // Will be filled after dice roll
+            h_roll: null,
+            p_sum: this.playerSum,
+            h_sum: this.houseSum,
+            wealth_available: this.wealth,
+            current_bet: this.currentBet,
+            remaining_stages: remainingStages,
+            ground_truth_probs: probs,
+            entropy: entropy,
+            action_taken: this.lastAction,
+            belief_reported: this.lastBelief,
+            bet_after_action: this.currentBet
+        };
 
         this.currentTrial.history.push(this.currentSnapshot);
 
-        // Next stage
+        // Deduct the bet from wealth (this happens after confidence is reported)
+        // NOTE: Wealth is now deducted immediately at startTrial and updated in handleAction
+        // So we just check for bankruptcy here if needed, but technically we shouldn't be able to bet if we don't have funds.
+        if (this.wealth < 0) {
+            alert("Bankrupt! Game Over.");
+            this.endExperiment();
+            return;
+        }
+
+        // Now roll the dice
         this.nextStage();
     }
 
