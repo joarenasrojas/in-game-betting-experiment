@@ -9,8 +9,11 @@ class GameSession {
         this.startWealth = config.startWealth || 500;
         this.ante = config.ante || 15;
         this.betStep = config.betStep || 5;
-        this.nTrials = config.nTrials || 10;
-        this.nStages = config.nStages || 3;
+        this.nTrials = config.nTrials || 100;
+        const nStagesMin = config.nStagesMin || 3;
+        const nStagesMax = config.nStagesMax || 6;
+        // Fixed per participant, varies between participants
+        this.nStages = Math.floor(Math.random() * (nStagesMax - nStagesMin + 1)) + nStagesMin;
         this.diceSides = config.diceSides || 6;
         this.startingBias = config.startingBias || 0;
         this.blockSize = 100;
@@ -115,6 +118,7 @@ class GameSession {
 
         this.currentTrial = {
             trial_id: this.currentTrialIndex + 1,
+            nStages: this.nStages,
             history: []
         };
 
@@ -282,6 +286,7 @@ class GameSession {
         const trialData = {
             participant_number: this.participantId,
             trial_id: this.currentTrial.trial_id,
+            n_stages: this.currentTrial.nStages,
             outcome: outcome,
             wealth_start: this.currentTrial.history[0].wealth_available + this.ante, // Approx
             wealth_end: this.wealth,
@@ -311,6 +316,7 @@ class GameSession {
 
         this.currentTrial = {
             trial_id: this.currentTrialIndex + 1,
+            nStages: this.nStages,
             history: []
         };
 
@@ -478,6 +484,7 @@ class GameSession {
         const trialData = {
             participant_number: this.participantId,
             trial_id: this.currentTrial.trial_id,
+            n_stages: this.currentTrial.nStages,
             outcome: outcome,
             wealth_start: this.currentTrial.history[0].wealth_available + this.ante, // Approx
             wealth_end: this.wealth,
@@ -504,10 +511,10 @@ class GameSession {
         const totalAccuracy = this.accuracyScores.reduce((a, b) => a + b, 0);
         const meanAccuracy = this.accuracyScores.length > 0 ? totalAccuracy / this.accuracyScores.length : 0;
 
-        // Payout Calculation: ((Wealth x Accuracy) / 100) = Performance Reward
+        // Payout Calculation: (Wealth x Accuracy) / 1330 = Performance Reward
         const finalWealth = Math.max(0, this.wealth);
-        const performanceReward = (finalWealth * meanAccuracy) / 100;
-        const basePay = 3.00;
+        const performanceReward = (finalWealth * meanAccuracy) / 1330;
+        const basePay = 9.00;
         const totalPayment = performanceReward + basePay;
 
         this.finalStats = {

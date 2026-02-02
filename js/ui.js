@@ -32,7 +32,9 @@ const UI = {
             questionOptions: document.querySelectorAll('.option-btn'),
 
             trialNum: document.getElementById('trial-num'),
+            trialTotal: document.getElementById('trial-total'),
             stageNum: document.getElementById('stage-num'),
+            stageTotal: document.getElementById('stage-total'),
             wealth: document.getElementById('wealth-display'),
             bet: document.getElementById('bet-display'),
             playerDice: document.getElementById('player-dice-container'),
@@ -100,17 +102,35 @@ const UI = {
         // Block Break
 
 
-        // End / Download
-        // End / Download
-        document.getElementById('btn-download-data').addEventListener('click', (e) => {
-            Logger.exportToCSV();
-            e.target.style.display = 'none';
-            const msg = document.createElement('p');
-            msg.textContent = "Session Ended. You may close this window.";
-            msg.style.color = "#888";
-            msg.style.marginTop = "1rem";
-            e.target.parentNode.appendChild(msg);
-            window.close();
+        // End / Save Data
+        document.getElementById('btn-download-data').addEventListener('click', async (e) => {
+            const btn = e.target;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const saved = await Logger.save(this.game.participantId);
+
+            if (saved) {
+                btn.style.display = 'none';
+                const msg = document.createElement('p');
+                msg.style.color = '#4CAF50';
+                msg.style.marginTop = '1rem';
+
+                if (Pavlovia.isOnPavlovia() && Pavlovia.completionURL) {
+                    msg.textContent = 'Data saved. Redirecting...';
+                    btn.parentNode.appendChild(msg);
+                    setTimeout(() => Pavlovia.redirectToProlific(), 2000);
+                } else if (Pavlovia.isOnPavlovia()) {
+                    msg.textContent = 'Data saved to server. You may close this window.';
+                    btn.parentNode.appendChild(msg);
+                } else {
+                    msg.textContent = 'Data downloaded. You may close this window.';
+                    btn.parentNode.appendChild(msg);
+                }
+            } else {
+                btn.textContent = 'Save Failed — Retry';
+                btn.disabled = false;
+            }
         });
 
         // Keyboard Shortcuts
@@ -213,11 +233,11 @@ const UI = {
                     this.el.endWealth.textContent = stats.finalWealth;
                     this.el.endMeanAccuracy.textContent = stats.meanAccuracy.toFixed(2);
 
-                    // Formula: (Wealth * Accuracy) / 100 = Reward
-                    const formulaStr = `(${stats.finalWealth} * ${stats.meanAccuracy.toFixed(2)}) / 100 = $${stats.performanceReward.toFixed(2)}`;
+                    // Formula: (Wealth * Accuracy) / 1330 = Reward
+                    const formulaStr = `(${stats.finalWealth} × ${stats.meanAccuracy.toFixed(2)}) / 1330 = £${stats.performanceReward.toFixed(2)}`;
                     this.el.endRewardCalc.textContent = formulaStr;
 
-                    this.el.endTotalPayment.textContent = '$' + stats.totalPayment.toFixed(2);
+                    this.el.endTotalPayment.textContent = '£' + stats.totalPayment.toFixed(2);
                 }
                 break;
         }
@@ -234,7 +254,9 @@ const UI = {
     renderGame() {
         // Header Stats
         this.el.trialNum.textContent = this.game.currentTrial.trial_id;
+        this.el.trialTotal.textContent = this.game.nTrials;
         this.el.stageNum.textContent = this.game.currentStage;
+        this.el.stageTotal.textContent = this.game.nStages;
         this.el.wealth.textContent = this.game.wealth;
         this.el.bet.textContent = this.game.currentBet;
 

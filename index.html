@@ -36,9 +36,9 @@
         <!-- INSTRUCTIONS VIEW 1 -->
         <div id="instructions-view-1" class="view">
             <h2>Gambling Game</h2>
-            <p>You will play a dice gambling game with <strong>10 trials</strong>. You start the game with <strong>300
-                    points</strong>. During each trial you have the chance to earn more. Each trial consists of 3
-                stages.</p>
+            <p>You will play a dice gambling game with <strong>100 trials</strong>. You start the game with <strong>300
+                    points</strong>. During each trial you have the chance to earn more. Each trial consists of
+                multiple stages.</p>
 
             <p><strong>The Goal:</strong> At the end of each trial you win if your total dice sum is higher than the
                 House's total sum.</p>
@@ -46,7 +46,7 @@
             <p><strong>The Setup:</strong> At the start of a trial, both you and the House start with a sum of 0.</p>
 
             <p><strong>The Process:</strong></p>
-            <p>At the beginning of each trial you bet <strong>15 points</strong> to play. Then the three stages follow.
+            <p>At the beginning of each trial you bet <strong>15 points</strong> to play. Then the stages follow.
             </p>
             <p style="margin-bottom: 0;">At the beginning of each stage you have three options:</p>
             <ul
@@ -90,7 +90,7 @@
         <!-- INSTRUCTIONS VIEW 3 -->
         <div id="instructions-view-3" class="view">
             <h2>Your Payout</h2>
-            <p style="margin-bottom: 0;">You are guaranteed <strong>$3</strong> for completing this experiment, but you
+            <p style="margin-bottom: 0;">You are guaranteed <strong>£9/hr</strong> for completing this experiment, but you
                 will also get a bonus depending on how well you do in the game. Your bonus depends on two numbers:</p>
 
             <ul
@@ -100,20 +100,20 @@
                 <li><strong>Your Multiplier:</strong> Your average Accuracy Score across the entire experiment.</li>
             </ul>
 
-            <p style="background: #333; padding: 0.5rem; border-radius: 4px; font-family: monospace;">Cash Payout = Base
-                Pay + (Points x Accuracy Score) / 100</p>
+            <p style="background: #333; padding: 0.5rem; border-radius: 4px; font-family: monospace;">Total Payment (£) = Base
+                Pay + (Points × Accuracy Score) / 1330</p>
 
             <p style="margin-bottom: 0;"><strong>Examples:</strong></p>
             <ul
                 style="text-align: left; display: inline-block; margin-top: 0; margin-bottom: 1rem; font-size: 0.9rem; padding-left: 1.2rem;">
-                <li>You win big (600 points) but guess randomly (50% accuracy): You take home (600 * 0.5)/100 =
-                    <strong>$3 bonus</strong> + $3 base pay for <strong>$6 in total</strong>.
+                <li>You win big (600 points) but guess randomly (50% accuracy): You take home (600 × 0.5)/1330 =
+                    <strong>£0.23 bonus</strong> + £9 base pay for <strong>£9.23 in total</strong>.
                 </li>
-                <li>You win big (600 points) and predict your wins/losses well (90% accuracy): You take home (600 *
-                    0.9)/100 = <strong>$5.40 bonus</strong> + $3 base pay for <strong>$8.40 in total</strong>.</li>
+                <li>You win big (600 points) and predict your wins/losses well (90% accuracy): You take home (600 ×
+                    0.9)/1330 = <strong>£0.41 bonus</strong> + £9 base pay for <strong>£9.41 in total</strong>.</li>
                 <li>You win big (600 points) but lie about your confidence (saying 100% when it was risky), resulting in
-                    10% accuracy: You take home (600 * 0.1)/100 = <strong>$0.60 bonus</strong> + $3 base pay for
-                    <strong>$3.60 in total</strong>.
+                    10% accuracy: You take home (600 × 0.1)/1330 = <strong>£0.05 bonus</strong> + £9 base pay for
+                    <strong>£9.05 in total</strong>.
                 </li>
             </ul>
 
@@ -124,8 +124,8 @@
         <!-- GAME VIEW -->
         <div id="game-view" class="view">
             <header class="game-header">
-                <div class="stat-box">Trial: <span id="trial-num">1</span>/10</div>
-                <div class="stat-box">Stage: <span id="stage-num">1</span>/3</div>
+                <div class="stat-box">Trial: <span id="trial-num">1</span>/<span id="trial-total">100</span></div>
+                <div class="stat-box">Stage: <span id="stage-num">1</span>/<span id="stage-total">3</span></div>
                 <div class="stat-box">Wealth: <span id="wealth-display">500</span></div>
                 <div class="stat-box">Bet: <span id="bet-display">15</span></div>
             </header>
@@ -176,17 +176,18 @@
                 <p><strong>Average Accuracy Score:</strong> <span id="end-mean-accuracy">0.00</span></p>
                 <hr style="border-color: #444; margin: 1rem 0;">
                 <p><strong>Performance Reward:</strong></p>
-                <p id="end-reward-calc" style="font-family: monospace; color: #aaa; font-size: 0.9rem;">(0 * 0.00) / 100
-                    = $0.00</p>
-                <p><strong>Base Pay:</strong> $3.00</p>
+                <p id="end-reward-calc" style="font-family: monospace; color: #aaa; font-size: 0.9rem;">(0 × 0.00) / 1330
+                    = £0.00</p>
+                <p><strong>Base Pay:</strong> £9.00/hr</p>
                 <hr style="border-color: #444; margin: 1rem 0;">
                 <p style="font-size: 1.2rem;"><strong>Total Payment:</strong> <span id="end-total-payment"
-                        style="color: #4CAF50;">$3.00</span></p>
+                        style="color: #4CAF50;">£9.00</span></p>
             </div>
 
-            <button id="btn-download-data" class="primary-btn">Download Data</button>
+            <button id="btn-download-data" class="primary-btn">Save & Finish</button>
         </div>
     </div>
+    <script src="js/pavlovia.js"></script>
     <script src="js/logger.js"></script>
     <script src="js/math.js"></script>
     <script src="js/game.js"></script>
