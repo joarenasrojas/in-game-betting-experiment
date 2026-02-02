@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Set your Pavlovia numeric project ID before deploying.
     // Set the Prolific completion URL to redirect participants after finishing.
     await Pavlovia.init({
-        projectId: null,          // TODO: set your Pavlovia project ID (numeric)
-        completionURL: null       // TODO: set your Prolific completion URL
+        projectId: 507152,          // TODO: set your Pavlovia project ID (numeric)
+        completionURL: 'https://app.prolific.com/submissions/complete?cc=C4KXC5T4'      // TODO: set your Prolific completion URL
     });
 
     // Use Prolific PID as participant ID if available
