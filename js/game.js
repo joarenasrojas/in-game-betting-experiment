@@ -6,7 +6,6 @@
 class GameSession {
     constructor(config) {
         this.participantId = config.participantId || this.generateParticipantId();
-        this.startWealth = config.startWealth || 500;
         this.ante = config.ante || 15;
         this.betStep = config.betStep || 5;
         this.nTrials = config.nTrials || 100;
@@ -14,6 +13,8 @@ class GameSession {
         const nStagesMax = config.nStagesMax || 6;
         // Fixed per participant, varies between participants
         this.nStages = Math.floor(Math.random() * (nStagesMax - nStagesMin + 1)) + nStagesMin;
+        // Starting wealth: (ante + betStep * nStages) * nTrials
+        this.startWealth = (this.ante + this.betStep * this.nStages) * this.nTrials;
         this.diceSides = config.diceSides || 6;
         this.startingBias = config.startingBias || 0;
         this.blockSize = 100;
@@ -511,9 +512,9 @@ class GameSession {
         const totalAccuracy = this.accuracyScores.reduce((a, b) => a + b, 0);
         const meanAccuracy = this.accuracyScores.length > 0 ? totalAccuracy / this.accuracyScores.length : 0;
 
-        // Payout Calculation: (Wealth x Accuracy) / 1330 = Performance Reward
+        // Payout Calculation: (Wealth x Accuracy) / 1930 = Performance Reward
         const finalWealth = Math.max(0, this.wealth);
-        const performanceReward = (finalWealth * meanAccuracy) / 1330;
+        const performanceReward = (finalWealth * meanAccuracy) / 1930;
         const basePay = 9.00;
         const totalPayment = performanceReward + basePay;
 

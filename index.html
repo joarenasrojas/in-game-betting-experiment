@@ -36,9 +36,9 @@
         <!-- INSTRUCTIONS VIEW 1 -->
         <div id="instructions-view-1" class="view">
             <h2>Gambling Game</h2>
-            <p>You will play a dice gambling game with <strong>100 trials</strong>. You start the game with <strong>300
+            <p>You will play a dice gambling game with <strong><span id="instr-ntrials">100</span> trials</strong>. You start the game with <strong><span id="instr-wealth">3000</span>
                     points</strong>. During each trial you have the chance to earn more. Each trial consists of
-                multiple stages.</p>
+                <strong><span id="instr-nstages">3</span> stages</strong>.</p>
 
             <p><strong>The Goal:</strong> At the end of each trial you win if your total dice sum is higher than the
                 House's total sum.</p>
@@ -101,20 +101,11 @@
             </ul>
 
             <p style="background: #333; padding: 0.5rem; border-radius: 4px; font-family: monospace;">Total Payment (£) = Base
-                Pay + (Points × Accuracy Score) / 1330</p>
+                Pay + (Points × Accuracy Score) / 1930</p>
 
             <p style="margin-bottom: 0;"><strong>Examples:</strong></p>
-            <ul
+            <ul id="instr-examples"
                 style="text-align: left; display: inline-block; margin-top: 0; margin-bottom: 1rem; font-size: 0.9rem; padding-left: 1.2rem;">
-                <li>You win big (600 points) but guess randomly (50% accuracy): You take home (600 × 0.5)/1330 =
-                    <strong>£0.23 bonus</strong> + £9 base pay for <strong>£9.23 in total</strong>.
-                </li>
-                <li>You win big (600 points) and predict your wins/losses well (90% accuracy): You take home (600 ×
-                    0.9)/1330 = <strong>£0.41 bonus</strong> + £9 base pay for <strong>£9.41 in total</strong>.</li>
-                <li>You win big (600 points) but lie about your confidence (saying 100% when it was risky), resulting in
-                    10% accuracy: You take home (600 × 0.1)/1330 = <strong>£0.05 bonus</strong> + £9 base pay for
-                    <strong>£9.05 in total</strong>.
-                </li>
             </ul>
 
             <p><strong>Bottom Line:</strong> To make the most money, play smart to build your bank, but be brutally
@@ -176,7 +167,7 @@
                 <p><strong>Average Accuracy Score:</strong> <span id="end-mean-accuracy">0.00</span></p>
                 <hr style="border-color: #444; margin: 1rem 0;">
                 <p><strong>Performance Reward:</strong></p>
-                <p id="end-reward-calc" style="font-family: monospace; color: #aaa; font-size: 0.9rem;">(0 × 0.00) / 1330
+                <p id="end-reward-calc" style="font-family: monospace; color: #aaa; font-size: 0.9rem;">(0 × 0.00) / 1930
                     = £0.00</p>
                 <p><strong>Base Pay:</strong> £9.00/hr</p>
                 <hr style="border-color: #444; margin: 1rem 0;">

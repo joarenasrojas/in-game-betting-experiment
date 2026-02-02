@@ -212,6 +212,7 @@ const UI = {
             case 'INSTRUCTIONS':
                 if (this.views.instructions1) {
                     this.views.instructions1.classList.add('active');
+                    this.populateInstructions();
                 }
                 break;
             case 'TRIAL_START':
@@ -233,13 +234,40 @@ const UI = {
                     this.el.endWealth.textContent = stats.finalWealth;
                     this.el.endMeanAccuracy.textContent = stats.meanAccuracy.toFixed(2);
 
-                    // Formula: (Wealth * Accuracy) / 1330 = Reward
-                    const formulaStr = `(${stats.finalWealth} × ${stats.meanAccuracy.toFixed(2)}) / 1330 = £${stats.performanceReward.toFixed(2)}`;
+                    // Formula: (Wealth * Accuracy) / 1930 = Reward
+                    const formulaStr = `(${stats.finalWealth} × ${stats.meanAccuracy.toFixed(2)}) / 1930 = £${stats.performanceReward.toFixed(2)}`;
                     this.el.endRewardCalc.textContent = formulaStr;
 
                     this.el.endTotalPayment.textContent = '£' + stats.totalPayment.toFixed(2);
                 }
                 break;
+        }
+    },
+
+    populateInstructions() {
+        const g = this.game;
+        // Screen 1: trials, stages, starting wealth
+        const instrNTrials = document.getElementById('instr-ntrials');
+        const instrWealth = document.getElementById('instr-wealth');
+        const instrNStages = document.getElementById('instr-nstages');
+        if (instrNTrials) instrNTrials.textContent = g.nTrials;
+        if (instrWealth) instrWealth.textContent = g.startWealth;
+        if (instrNStages) instrNStages.textContent = g.nStages;
+
+        // Screen 3: dynamic examples based on starting wealth
+        const exList = document.getElementById('instr-examples');
+        if (exList) {
+            const w = g.startWealth;
+            const examples = [
+                { desc: 'guess randomly', acc: 0.5, accPct: '50%' },
+                { desc: 'predict well', acc: 0.9, accPct: '90%' },
+                { desc: 'lie about confidence', acc: 0.1, accPct: '10%' }
+            ];
+            exList.innerHTML = examples.map(ex => {
+                const bonus = (w * ex.acc) / 1930;
+                const total = 9 + bonus;
+                return `<li>You end with ${w} points and ${ex.accPct} accuracy: (${w} × ${ex.acc}) / 1930 = <strong>£${bonus.toFixed(2)} bonus</strong> + £9 base pay for <strong>£${total.toFixed(2)} in total</strong>.</li>`;
+            }).join('');
         }
     },
 

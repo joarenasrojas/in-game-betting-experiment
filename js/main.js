@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize Game
     const game = new GameSession({
-        participantId: participantId,
-        startWealth: 300
+        participantId: participantId
     });
 
     // Initialize UI with game instance
